@@ -17,9 +17,6 @@ export async function fight(firstFighter, secondFighter) {
 
                 /* Не даэмо виконувати комбінацію з критичного удару гравцю №1 
                 поки не пройде час timeBetweenAttacks та timeBetweenCriticalAttacks */
-                console.log(': ', controls.PlayerOneCriticalHitCombination.includes(event.code),
-                !abilityAttackFirstFighter,  !abilityCriticalAttackFirstFighter, ' - ', controls.PlayerOneCriticalHitCombination.includes(event.code) &&
-                (!abilityAttackFirstFighter || !abilityCriticalAttackFirstFighter));
                 if (
                     controls.PlayerOneCriticalHitCombination.includes(event.code) &&
                     (!abilityAttackFirstFighter || !abilityCriticalAttackFirstFighter)
