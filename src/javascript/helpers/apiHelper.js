@@ -21,7 +21,7 @@ function getFighterById(endpoint) {
     const end = endpoint.lastIndexOf('.json');
     const id = endpoint.substring(start + 1, end);
     const fightersDetailsfind = fightersDetailsCopy.find(it => it._id === id);
-     return fightersDetailsfind
+    return fightersDetailsfind;
 }
 
 async function fakeCallApi(endpoint) {

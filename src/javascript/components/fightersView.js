@@ -28,7 +28,8 @@ function createFighter(fighter, selectFighter) {
     return fighterElement;
 }
 
-export default function createFighters(fighters) { // He receives an array of fighters works once at the beginning
+export default function createFighters(fighters) {
+    // He receives an array of fighters works once at the beginning
     const selectFighter = createFightersSelector();
     const container = createElement({ tagName: 'div', className: 'fighters___root' });
     const preview = createElement({ tagName: 'div', className: 'preview-container___root' });

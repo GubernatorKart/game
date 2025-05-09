@@ -10,23 +10,30 @@ export async function fight(firstFighter, secondFighter) {
         let abilityCriticalAttackFirstFighter = true;
         let abilityAttackSecondFighter = true;
         let abilityCriticalAttackSecondFighter = true;
-        const timeBetweenAttacks = 500;
+        const timeBetweenAttacks = 1000;
         const timeBetweenCriticalAttacks = 10000;
-        document.addEventListener('keydown', keyDownFun);
         function keyDownFun(event) {
             if (!event.repeat) {
-                audio.play();
 
                 /* Не даэмо виконувати комбінацію з критичного удару гравцю №1 
                 поки не пройде час timeBetweenAttacks та timeBetweenCriticalAttacks */
-                if (controls.PlayerOneCriticalHitCombination.includes(event.code) && (!abilityAttackFirstFighter || !abilityCriticalAttackFirstFighter)) {
-                    return
+                console.log(': ', controls.PlayerOneCriticalHitCombination.includes(event.code),
+                !abilityAttackFirstFighter,  !abilityCriticalAttackFirstFighter, ' - ', controls.PlayerOneCriticalHitCombination.includes(event.code) &&
+                (!abilityAttackFirstFighter || !abilityCriticalAttackFirstFighter));
+                if (
+                    controls.PlayerOneCriticalHitCombination.includes(event.code) &&
+                    (!abilityAttackFirstFighter || !abilityCriticalAttackFirstFighter)
+                ) {
+                    return;
                 }
 
                 /* Не даэмо виконувати комбінацію з критичного удару гравцю №2 
                 поки не пройде час timeBetweenAttacks та timeBetweenCriticalAttacks */
-                if (controls.PlayerTwoCriticalHitCombination.includes(event.code) && (!abilityAttackSecondFighter || !abilityCriticalAttackSecondFighter)) {
-                    return
+                if (
+                    controls.PlayerTwoCriticalHitCombination.includes(event.code) &&
+                    (!abilityAttackSecondFighter || !abilityCriticalAttackSecondFighter)
+                ) {
+                    return;
                 }
 
                 // Не даємо атакувати гравцю №1 частіше ніж timeBetweenAttacks
@@ -34,7 +41,7 @@ export async function fight(firstFighter, secondFighter) {
                     abilityAttackFirstFighter = false;
                     keySet.add(event.code);
                     setTimeout(() => {
-                        abilityAttackFirstFighter = true
+                        abilityAttackFirstFighter = true;
                     }, timeBetweenAttacks);
                 } else if (event.code === controls.PlayerOneAttack && !abilityAttackFirstFighter) return;
 
@@ -43,7 +50,7 @@ export async function fight(firstFighter, secondFighter) {
                     abilityAttackSecondFighter = false;
                     keySet.add(event.code);
                     setTimeout(() => {
-                        abilityAttackSecondFighter = true
+                        abilityAttackSecondFighter = true;
                     }, timeBetweenAttacks);
                 } else if (event.code === controls.PlayerTwoAttack && !abilityAttackSecondFighter) return;
 
@@ -51,37 +58,41 @@ export async function fight(firstFighter, secondFighter) {
 
                 // Атакує перший гравець
                 if (keySet.has(controls.PlayerOneAttack) && !keySet.has(controls.PlayerOneBlock)) {
+                    audio.play();
                     getDamage(firstFighter, secondFighter, keySet.has(controls.PlayerTwoBlock));
                 }
 
                 // Атакує другий гравець
                 if (keySet.has(controls.PlayerTwoAttack) && !keySet.has(controls.PlayerTwoBlock)) {
+                    audio.play();
                     getDamage(secondFighter, firstFighter, keySet.has(controls.PlayerOneBlock));
                 }
 
                 // Виконання критичної атаки гравцем №1. Виконуєтся коли у наборі є всі три комбінації клавіш.
                 if (controls.PlayerOneCriticalHitCombination.every(element => keySet.has(element))) {
-                    secondFighter.health -= firstFighter.attack * 2
+                    audio.play();
+                    secondFighter.health -= firstFighter.attack * 2;
                     abilityAttackFirstFighter = false;
                     abilityCriticalAttackFirstFighter = false;
                     setTimeout(() => {
-                        abilityCriticalAttackFirstFighter = true
+                        abilityCriticalAttackFirstFighter = true;
                     }, timeBetweenCriticalAttacks);
                     setTimeout(() => {
-                        abilityAttackFirstFighter = true
+                        abilityAttackFirstFighter = true;
                     }, timeBetweenAttacks);
                 }
 
                 // Виконання критичної атаки гравцем №2. Виконуєтся коли у наборі є всі три комбінації клавіш.
                 if (controls.PlayerTwoCriticalHitCombination.every(element => keySet.has(element))) {
-                    firstFighter.health -= secondFighter.attack * 2
+                    audio.play();
+                    firstFighter.health -= secondFighter.attack * 2;
                     abilityAttackSecondFighter = false;
                     abilityCriticalAttackSecondFighter = false;
                     setTimeout(() => {
-                        abilityCriticalAttackSecondFighter = true
+                        abilityCriticalAttackSecondFighter = true;
                     }, timeBetweenCriticalAttacks);
                     setTimeout(() => {
-                        abilityAttackSecondFighter = true
+                        abilityAttackSecondFighter = true;
                     }, timeBetweenAttacks);
                 }
 
@@ -91,30 +102,32 @@ export async function fight(firstFighter, secondFighter) {
                     document.removeEventListener('keydown', keyDownFun);
                     document.removeEventListener('keyup', keyUpFun);
                     createHealthIndicators(firstFighter, secondFighter);
-                    resolve(firstFighter)
+                    resolve(firstFighter);
                 } else if (secondFighter.health <= 0) {
                     secondFighter.health = 0;
                     document.removeEventListener('keydown', keyDownFun);
                     document.removeEventListener('keyup', keyUpFun);
                     createHealthIndicators(firstFighter, secondFighter);
-                    resolve(secondFighter)
+                    resolve(secondFighter);
                 } else createHealthIndicators(firstFighter, secondFighter);
             }
-
         }
-
-        document.addEventListener('keyup', keyUpFun);
+        document.addEventListener('keydown', keyDownFun);
         function keyUpFun(event) {
             keySet.delete(event.code);
         }
-    })
+        document.addEventListener('keyup', keyUpFun);
+    });
 }
 
 const criticalChance = () => Math.random() * 2;
 
+/* eslint-disable no-param-reassign */
 export function getDamage(attacker, defender, block) {
     const hitPower = getHitPower(attacker);
-    defender.health = block ? defender.health - Math.max(0, hitPower - getBlockPower(defender)) : defender.health - hitPower;
+    defender.health = block
+        ? defender.health - Math.max(0, hitPower - getBlockPower(defender))
+        : defender.health - hitPower;
 }
 
 export function getHitPower(fighter) {

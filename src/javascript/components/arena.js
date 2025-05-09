@@ -1,12 +1,12 @@
 import createElement from '../helpers/domHelper';
 import { createFighterImage } from './fighterPreview';
-import {fight} from './fight';
-import showWinnerModal from './modal/winner'
+import { fight } from './fight';
+import showWinnerModal from './modal/winner';
 
 function createFighter(fighter, position) {
     const imgElement = createFighterImage(fighter);
     const positionClassName = position === 'right' ? 'arena___right-fighter' : 'arena___left-fighter';
-    
+
     const fighterElement = createElement({
         tagName: 'div',
         className: `arena___fighter ${positionClassName}`
@@ -21,7 +21,7 @@ function createFighters(firstFighter, secondFighter) {
     const firstFighterElement = createFighter(firstFighter, 'left');
     const secondFighterElement = createFighter(secondFighter, 'right');
     battleField.append(firstFighterElement, secondFighterElement);
-    
+
     return battleField;
 }
 
@@ -36,31 +36,35 @@ function createHealthIndicator(fighter, position, choiceFighters) {
             className: 'arena___health-bar',
             attributes: { id: `${position}-fighter-indicator` }
         });
-        bar.append(`Health: ${Math.ceil(fighter.health)}` + (choiceFighters ? ` | Attack: ${fighter.attack} | Defense: ${fighter.defense}` : '')); //Добавляем индикатор здоровья
+        bar.append(
+            `Health: ${Math.ceil(fighter.health)}${
+                choiceFighters ? ` | Attack: ${fighter.attack} | Defense: ${fighter.defense}` : ''
+            }`
+        ); // Добавляем индикатор здоровья
         fighterName.innerText = name;
         indicator.append(bar);
         container.append(fighterName, indicator);
 
         return container;
-    } else return ''
+    }
+    return '';
 }
 
 export function createHealthIndicators(leftFighter, rightFighter, choiceFighters = false) {
     // перевіряємо, чи є вже контейнер з індикаторами
-    let healthIndicatorsExists = document.querySelector('.arena___fight-status');
+    const healthIndicatorsExists = document.querySelector('.arena___fight-status');
     const healthIndicators = createElement({ tagName: 'div', className: 'arena___fight-status' });
     const versusSign = createElement({ tagName: 'div', className: 'arena___versus-sign' });
     const leftFighterIndicator = createHealthIndicator(leftFighter, 'left', choiceFighters);
     const rightFighterIndicator = createHealthIndicator(rightFighter, 'right', choiceFighters);
-    
+
     if (healthIndicatorsExists) {
         healthIndicatorsExists.innerHTML = '';
         healthIndicatorsExists.append(leftFighterIndicator, versusSign, rightFighterIndicator);
-        return healthIndicatorsExists
-    } else {
-        healthIndicators.append(leftFighterIndicator, versusSign, rightFighterIndicator);
-        return healthIndicators
+        return healthIndicatorsExists;
     }
+    healthIndicators.append(leftFighterIndicator, versusSign, rightFighterIndicator);
+    return healthIndicators;
 }
 
 function createArena(selectedFighters) {

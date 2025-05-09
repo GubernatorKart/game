@@ -8,7 +8,7 @@ import fighterService from '../services/fightersService';
 
 export async function getFighterInfo(fighterId) {
     const fighterDetails = await fighterService.getFighterDetails(fighterId);
-    return fighterDetails // get fighter info from fighterDetailsMap or from service and write it to fighterDetailsMap
+    return fighterDetails; // get fighter info from fighterDetailsMap or from service and write it to fighterDetailsMap
 }
 
 function startFight(selectedFighters) {
