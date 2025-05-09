@@ -1,0 +1,16 @@
+.fighter-preview___root {
+  display: flex;
+  flex-basis: 250px;
+  justify-content: center;
+}
+
+.fighter-preview___right {
+  align-items: flex-end;
+  height: 200px;
+  transform: scaleX(-1);
+}
+
+.fighter-preview___left {
+  align-items: flex-start;
+  height: 200px;
+}
